@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniCalc | Precision Calculator & E-Commerce ROAS Lab</title>
+  <meta name="description" content="Dual-mode financial tool engineered by Karl Andre Gutierrez featuring scientific arithmetic and an e-commerce profit & ROAS modeling engine.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header with Mode Selector -->
+    <header class="calc-header">
+      <div class="calc-brand">
+        <div class="calc-icon">Ω</div>
+        <div class="calc-title">
+          <h1>OmniCalc</h1>
+          <p>Financial & Mathematical Precision Suite</p>
+        </div>
+      </div>
+
+      <div class="mode-tabs">
+        <button class="tab-btn active" id="tabStandard" onclick="switchMode('standard')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="8" x2="16" y1="12" y2="12"/><line x1="12" x2="12" y1="8" y2="16"/></svg>
+          <span>Standard Calculator</span>
+        </button>
+        <button class="tab-btn" id="tabEcom" onclick="switchMode('ecom')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>E-Commerce ROAS Lab</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MODE 1: Standard Calculator View -->
+    <div class="standard-calc-view" id="standardView">
+      <div class="calc-chassis">
+        <!-- Digital Display Screen -->
+        <div class="calc-screen">
+          <div class="calc-history-expr" id="screenHistory"></div>
+          <div class="calc-primary-val" id="screenPrimary">0</div>
+        </div>
+
+        <!-- Keypad -->
+        <div class="calc-keypad">
+          <!-- Row 1: Memory & Clear -->
+          <button class="k-btn action" onclick="handleClearAll()">AC</button>
+          <button class="k-btn action" onclick="handleBackspace()">⌫</button>
+          <button class="k-btn op" onclick="handleInput('%')">%</button>
+          <button class="k-btn op" onclick="handleOperator('/')">÷</button>
+
+          <!-- Row 2 -->
+          <button class="k-btn" onclick="handleNumber('7')">7</button>
+          <button class="k-btn" onclick="handleNumber('8')">8</button>
+          <button class="k-btn" onclick="handleNumber('9')">9</button>
+          <button class="k-btn op" onclick="handleOperator('*')">×</button>
+
+          <!-- Row 3 -->
+          <button class="k-btn" onclick="handleNumber('4')">4</button>
+          <button class="k-btn" onclick="handleNumber('5')">5</button>
+          <button class="k-btn" onclick="handleNumber('6')">6</button>
+          <button class="k-btn op" onclick="handleOperator('-')">−</button>
+
+          <!-- Row 4 -->
+          <button class="k-btn" onclick="handleNumber('1')">1</button>
+          <button class="k-btn" onclick="handleNumber('2')">2</button>
+          <button class="k-btn" onclick="handleNumber('3')">3</button>
+          <button class="k-btn op" onclick="handleOperator('+')">+</button>
+
+          <!-- Row 5 -->
+          <button class="k-btn" onclick="handleToggleSign()">±</button>
+          <button class="k-btn" onclick="handleNumber('0')">0</button>
+          <button class="k-btn" onclick="handleDecimal()">.</button>
+          <button class="k-btn equals" onclick="handleCalculate()">=</button>
+        </div>
+      </div>
+
+      <!-- History Tape Sidebar -->
+      <aside class="history-sidebar">
+        <div class="history-header">
+          <h3>Calculation Tape</h3>
+          <button class="btn-clear-history" onclick="clearHistory()">Clear</button>
+        </div>
+        <div class="history-list" id="historyList">
+          <div style="font-size: 12.5px; color: var(--text-dim); text-align: center; padding: 30px 0;">
+            No past calculations yet.
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- MODE 2: E-Commerce ROAS & Profit Lab View -->
+    <div class="ecom-calc-view" id="ecomView">
+      <!-- Input Controls -->
+      <div class="ecom-inputs">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Unit Economics Model</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">Adjust inputs to calculate break-even targets and margins.</p>
+
+        <div class="input-group">
+          <label class="input-label" for="inSellingPrice">
+            <span>Selling Price (Retail)</span>
+            <span style="color: var(--accent-primary);">$ AUD</span>
+          </label>
+          <div class="input-field-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="inSellingPrice" class="ecom-input" value="68.00" step="0.5" oninput="calculateEcom()">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="inCogs">
+            <span>Product Cost (COGS)</span>
+            <span style="color: var(--accent-orange);">$ AUD</span>
+          </label>
+          <div class="input-field-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="inCogs" class="ecom-input" value="16.50" step="0.5" oninput="calculateEcom()">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="inShipping">
+            <span>Shipping & Packaging Cost</span>
+            <span>$ AUD</span>
+          </label>
+          <div class="input-field-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="inShipping" class="ecom-input" value="7.50" step="0.5" oninput="calculateEcom()">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="inAdSpend">
+            <span>Customer Acquisition Cost (Ad Spend / CPA)</span>
+            <span style="color: #60A5FA;">Target CAC</span>
+          </label>
+          <div class="input-field-wrap">
+            <span class="input-prefix">$</span>
+            <input type="number" id="inAdSpend" class="ecom-input" value="18.00" step="0.5" oninput="calculateEcom()">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="inFeePct">
+            <span>Merchant & Platform Fee % (Shopify + Stripe)</span>
+            <span>%</span>
+          </label>
+          <div class="input-field-wrap">
+            <span class="input-prefix">%</span>
+            <input type="number" id="inFeePct" class="ecom-input" value="2.9" step="0.1" oninput="calculateEcom()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Display -->
+      <div class="ecom-outputs">
+        <div class="metric-hero">
+          <div class="metric-hero-label">Net Profit Per Unit</div>
+          <div class="metric-hero-val" id="outNetProfit">$24.03</div>
+          <div class="metric-hero-sub" id="outNetMargin">35.3% Net Profit Margin</div>
+        </div>
+
+        <div class="metrics-subgrid">
+          <div class="metric-box">
+            <div class="metric-box-title">Break-Even ROAS</div>
+            <div class="metric-box-val" id="outBreakEvenRoas" style="color: #60A5FA;">1.62x</div>
+          </div>
+
+          <div class="metric-box">
+            <div class="metric-box-title">Current Actual ROAS</div>
+            <div class="metric-box-val" id="outActualRoas" style="color: var(--accent-green);">3.78x</div>
+          </div>
+
+          <div class="metric-box">
+            <div class="metric-box-title">Gross Margin</div>
+            <div class="metric-box-val" id="outGrossMargin">64.7%</div>
+          </div>
+
+          <div class="metric-box">
+            <div class="metric-box-title">Max Tolerable CAC</div>
+            <div class="metric-box-val" id="outMaxCac" style="color: var(--accent-orange);">$42.03</div>
+          </div>
+        </div>
+
+        <!-- Profit Allocation Stacked Bar -->
+        <div class="breakdown-bar-wrap">
+          <div class="breakdown-bar-label">Revenue Breakdown Allocation</div>
+          <div class="stacked-bar">
+            <div class="bar-segment bar-cogs" id="barCogs" style="width: 24%;" title="COGS"></div>
+            <div class="bar-segment bar-fee" id="barFee" style="width: 14%;" title="Fees & Shipping"></div>
+            <div class="bar-segment bar-ad" id="barAd" style="width: 26%;" title="Ad Spend"></div>
+            <div class="bar-segment bar-profit" id="barProfit" style="width: 36%;" title="Net Profit"></div>
+          </div>
+          <div class="legend-row">
+            <div><span class="legend-dot" style="background: #F87171;"></span> COGS</div>
+            <div><span class="legend-dot" style="background: #FBBF24;"></span> Shipping & Fees</div>
+            <div><span class="legend-dot" style="background: #60A5FA;"></span> Ad CAC</div>
+            <div><span class="legend-dot" style="background: #34D399;"></span> Net Profit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="calc-footer">
+      OmniCalc • Engineered by Karl Andre Gutierrez • Keyboard Enabled (0-9, +, -, *, /, Enter, Backspace, Esc)
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
