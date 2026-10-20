@@ -43,7 +43,7 @@ Most calculators are limited to simple arithmetic. **OmniCalc** solves two disti
 
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/franku69/omnicalc.git
+   git clone https://github.com/moky12345/omnicalc.git
    cd omnicalc
    ```
 2. Open `index.html` in your web browser.
